@@ -1,0 +1,80 @@
+<div>
+    <form nz-form [formGroup]="userForm">
+        <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label nz-form-item-required>用户名</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" >
+                <nz-input formControlName="name" [nzPlaceHolder]="'请输入用户名称'"></nz-input>
+                <div nz-form-explain *ngIf="userForm.controls.name.dirty&&userForm.controls.name.hasError('required')">请按规则输入用户名称!</div>
+            </div>
+        </div>
+        <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label>密码</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="userForm.controls.address">
+                <nz-input formControlName="password" [nzPlaceHolder]="'请输入密码'"></nz-input>
+                <div nz-form-explain *ngIf="userForm.controls.password.dirty&&userForm.controls.password.hasError('required')">请按规则输入密码!</div>
+            </div>
+        </div>
+
+        <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label nz-form-item-required>角色</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="userForm.controls.role">
+                <nz-select formControlName="role" [nzPlaceHolder]="'请选择用户角色'">
+                    <ng-container *ngIf="roleList">
+                        <ng-container *ngFor="let data of roleList">
+                            <nz-option [nzLabel]="data.name" [nzValue]="data.id" > </nz-option>
+                        </ng-container>
+                    </ng-container>
+                </nz-select>
+                <div nz-form-explain *ngIf="userForm.controls.role.dirty&&userForm.controls.role.hasError('required')">请选择用户角色!</div>
+            </div>
+        </div>
+
+        <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label nz-form-item-required>公司</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="userForm.controls.company">
+                <nz-select formControlName="company" [nzPlaceHolder]="'请选择所属公司'">
+                    <ng-container *ngIf="companyList">
+                        <ng-container *ngFor="let data of companyList">
+                            <nz-option [nzLabel]="data.name" [nzValue]="data.id" > </nz-option>
+                        </ng-container>
+                    </ng-container>
+                </nz-select>
+                <div nz-form-explain *ngIf="userForm.controls.company.dirty&&userForm.controls.company.hasError('required')">请选择用户所属公司!</div>
+            </div>
+        </div>
+
+        <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label>电话</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="userForm.controls.phone">
+                <nz-input formControlName="phone" [nzPlaceHolder]="'请输入电话号码'"></nz-input>
+            </div>
+        </div>
+
+        <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label>备注</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="userForm.controls.note">
+                <nz-input formControlName="note" [nzPlaceHolder]="'请输入备注信息'"></nz-input>
+            </div>
+        </div>
+    </form>
+    <div class="customize-footer" align="right">
+        <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="submit()" style="right:10px;">
+            提交
+        </button>
+        <button nz-button [nzType]="'default'" [nzSize]="'large'" (click)="handleCancel($event)">
+            取消
+        </button>
+    </div>
+</div>

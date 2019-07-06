@@ -1,0 +1,89 @@
+<div>
+    <form nz-form [formGroup]="productForm">
+        <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label nz-form-item-required>名称</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="productForm.controls.name">
+                <nz-input formControlName="name" [nzPlaceHolder]="'请输入名称'"></nz-input>
+                <div nz-form-explain *ngIf="productForm.controls.name.dirty&&productForm.controls.name.hasError('required')">请按规则输入名称!</div>
+            </div>
+        </div>
+
+        <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label nz-form-item-required>类型</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="productForm.controls.type">
+                <nz-select formControlName="type" [nzPlaceHolder]="'请选择产品类型'">
+                    <ng-container *ngIf="_typeList">
+                        <ng-container *ngFor="let data of _typeList">
+                            <nz-option [nzLabel]="data.name" [nzValue]="data.id" > </nz-option>
+                        </ng-container>
+                    </ng-container>
+                </nz-select>
+                <div nz-form-explain *ngIf="productForm.controls.type.dirty&&productForm.controls.type.hasError('required')">请按规则输入名称!</div>
+            </div>
+        </div>
+
+        <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label nz-form-item-required>规格</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="productForm.controls.spec">
+                <nz-input formControlName="spec" [nzPlaceHolder]="'请输入规格（50斤/大包/小包）'"></nz-input>
+                <div nz-form-explain *ngIf="productForm.controls.spec.dirty&&productForm.controls.spec.hasError('required')">请按规则输入规格!</div>
+            </div>
+        </div>
+        <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label nz-form-item-required>采购价</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="productForm.controls.priceIn">
+                <nz-input formControlName="priceIn" [nzPlaceHolder]="'请输入进货价格'"></nz-input>
+                <div nz-form-explain *ngIf="productForm.controls.priceIn.dirty&&productForm.controls.priceIn.hasError('required')">请按规则输入进货价!</div>
+            </div>
+        </div>
+        <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label nz-form-item-required>销售价</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="productForm.controls.priceOut">
+                <nz-input formControlName="priceOut" [nzPlaceHolder]="'请输入销售价'"></nz-input>
+                <div nz-form-explain *ngIf="productForm.controls.priceOut.dirty&&productForm.controls.priceOut.hasError('required')">请按规则输入销售价!</div>
+            </div>
+        </div>
+        <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label >供应商</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="productForm.controls.provider">
+                <nz-input formControlName="provider" [nzPlaceHolder]="'请输入供应商名称'"></nz-input>
+            </div>
+        </div>
+        <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label >厂家</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="productForm.controls.factory">
+                <nz-input formControlName="factory" [nzPlaceHolder]="'请输入生产厂家'"></nz-input>
+            </div>
+        </div>
+        <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label >备注</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="productForm.controls.note">
+                <nz-input formControlName="note" [nzPlaceHolder]="'请输入备注信息'"></nz-input>
+            </div>
+        </div>
+    </form>
+    <div class="customize-footer" align="right">
+        <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="submit()" style="right:10px;">
+            提交
+        </button>
+        <button nz-button [nzType]="'default'" [nzSize]="'large'" (click)="handleCancel($event)">
+            取消
+        </button>
+    </div>
+</div>

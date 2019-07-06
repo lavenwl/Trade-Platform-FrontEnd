@@ -1,0 +1,65 @@
+{
+    "app": {
+        "name": "SLSYS",
+        "description": "这是一个测试的系统说明"
+    },
+    "user": {
+        "name": "Admin",
+        "avatar": "./assets/img/zorro.svg",
+        "email": "lavenwl@gmail.com"
+    },
+    "menu": [
+        {
+            "text": "主导航",
+            "translate": "main_navigation",
+            "group": true,
+            "children": [
+                {
+                    "text": "产品模块",
+                    "translate": "product-module",
+                    "link": "/product",
+                    "icon": "icon-speedometer",
+                    "children": [{
+                        "text": "类型管理",
+                        "link": "/product/type",
+                        "translate": "product-type-management"
+                    }, {
+                        "text": "产品管理",
+                        "link": "/product/product",
+                        "translate": "product-product-management"
+                    }]
+                },{
+                    "text": "订单模块",
+                    "translate": "order-module",
+                    "link": "/order",
+                    "icon": "icon-speedometer",
+                    "children": [{
+                        "text": "采购订单",
+                        "link": "/order/purchase",
+                        "translate": "order-purchase-management"
+                    }, {
+                        "text": "销售订单",
+                        "link": "/order/sale",
+                        "translate": "order-sale-management"
+                    }]
+                },{
+                    "text": "系统管理",
+                    "translate": "system-module",
+                    "link": "/system",
+                    "icon": "icon-speedometer",
+                    "children": [{
+                        "text": "公司管理",
+                        "link": "/system/company",
+                        "translate": "system-company-management"
+                    }, {
+                        "text": "用户管理",
+                        "link": "/system/user",
+                        "translate": "system-user-management"
+                    }, {
+                        "text": "角色管理",
+                        "link": "/system/role",
+                        "translate": "system-role-management"
+                    }]
+                }]
+        }]
+}

@@ -1,0 +1,17 @@
+<div class="container">
+    <div class="top">
+        <div class="head">
+            <a [routerLink]="['/']">
+                <img class="logo" src="./assets/img/logo-color.svg">
+                <span class="title">SLSYS</span>
+            </a>
+        </div>
+        <p class="desc">助力！让您的生意更轻松！</p>
+    </div>
+    <router-outlet></router-outlet>
+    <global-footer [links]="links">
+        <ng-template #copyright>
+            Copyright <nz-icon nzType="copyright"></nz-icon> 2017 <a href="" target="_blank">SLSYS</a>出品
+        </ng-template>
+    </global-footer>
+</div>

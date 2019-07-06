@@ -1,0 +1,257 @@
+
+<form nz-form [formGroup]="orderForm" [nzLayout]="'vertical'">
+    <nz-card [nzBordered]="false">
+        <div nz-row [nzGutter]="16">
+            <div nz-col nzMd="6" nzSm="12" nzXs="24">
+                <div nz-form-item nz-row>
+                    <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                        <label nz-form-item-required>销售公司</label>
+                    </div>
+                    <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+                        <nz-select formControlName="saleCompany" [nzPlaceHolder]="'请选择销售公司'">
+                            <ng-container *ngIf="companyList">
+                                <ng-container *ngFor="let data of companyList">
+                                    <nz-option [nzLabel]="data.name" [nzValue]="data.id" > </nz-option>
+                                </ng-container>
+                            </ng-container>
+                        </nz-select>
+                        <div nz-form-explain *ngIf="orderForm.controls.saleCompany.dirty&&orderForm.controls.saleCompany.hasError('required')">请按规则选择销售方!</div>
+                    </div>
+                </div>
+            </div>
+            <div nz-col nzMd="6" nzSm="12" nzXs="24">
+                <div nz-form-item nz-row>
+                    <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                        <label nz-form-item-required>采购公司</label>
+                    </div>
+                    <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" >
+                        <nz-select formControlName="purchaseCompany" [nzPlaceHolder]="'请选择采购公司'">
+                            <ng-container *ngIf="companyList">
+                                <ng-container *ngFor="let data of companyList">
+                                    <nz-option [nzLabel]="data.name" [nzValue]="data.id" > </nz-option>
+                                </ng-container>
+                            </ng-container>
+                        </nz-select>
+                        <div nz-form-explain *ngIf="orderForm.controls.purchaseCompany.dirty&&orderForm.controls.purchaseCompany.hasError('required')">请按规则选择采购方!</div>
+                    </div>
+                </div>
+            </div>
+            <div nz-col nzMd="6" nzSm="12" nzXs="24">
+                <div nz-form-item nz-row>
+                    <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                        <label nz-form-item-required>订单金额</label>
+                    </div>
+                    <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="orderForm.controls.money">
+                        <nz-input formControlName="money" [nzPlaceHolder]="'请输入订单金额'"></nz-input>
+                    </div>
+                </div>
+            </div>
+            <div nz-col nzMd="6" nzSm="12" nzXs="24">
+                <div nz-form-item nz-row>
+                    <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                        <label>描述</label>
+                    </div>
+                    <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="orderForm.controls.description">
+                        <nz-input formControlName="description" [nzPlaceHolder]="'请输入订单描述信息'"></nz-input>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nz-table formArrayName="items" [nzDataSource]="items.value" [nzIsPagination]="false">
+            <thead nz-thead>
+            <tr>
+                <th nz-th>序列号</th>
+                <th nz-th>产品名称</th>
+                <th nz-th>规格</th>
+                <th nz-th>数量</th>
+                <th nz-th>单价</th>
+                <th nz-th>金额</th>
+                <th nz-th>备注</th>
+                <th nz-th>操作</th>
+            </tr>
+            </thead>
+            <tbody nz-tbody>
+            <tr nz-tbody-tr *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
+                <td nz-td>
+                    <span *ngIf="editIndex!==i">{{items.value[i].num}}</span>
+                    <span *ngIf="editIndex===i" nz-form-control>
+                    {{items.value[i].num}}
+                </span>
+                </td>
+                <td nz-td>
+                    <span *ngIf="editIndex!==i">{{getProductName(items.value[i].productId)}}</span>
+                    <span *ngIf="editIndex===i" nz-form-control [nzValidateStatus]="item.controls.productId">
+                    <nz-select formControlName="productId" [nzPlaceHolder]="'请选择产品'" (nzOpenChange)="calculate(item)">
+                        <ng-container *ngIf="productList">
+                            <ng-container *ngFor="let data of productList">
+                                <nz-option [nzLabel]="data.name" [nzValue]="data.id" > </nz-option>
+                            </ng-container>
+                        </ng-container>
+                    </nz-select>
+                </span>
+                </td>
+                <td nz-td>
+                    <span *ngIf="editIndex!==i">{{getProductSpec(items.value[i].productId)}}</span>
+                    <span *ngIf="editIndex===i" nz-form-control>
+                    {{getProductSpec(items.value[i].productId)}}
+                </span>
+                </td>
+                <td nz-td>
+                    <span *ngIf="editIndex!==i">{{items.value[i].quantity}}</span>
+                    <span *ngIf="editIndex===i" nz-form-control [nzValidateStatus]="item.controls.quantity">
+                    <nz-input-number formControlName="quantity" nzPlaceHolder="请输入数量" nzSize="large" (nzBlur)="calculate(item)"></nz-input-number>
+                </span>
+                </td>
+                <td nz-td>
+                    <span *ngIf="editIndex!==i">{{items.value[i].price | _currency}}</span>
+                    <span *ngIf="editIndex===i" nz-form-control [nzValidateStatus]="item.controls.price">
+                    <nz-input formControlName="price" nzPlaceHolder="请输入产品单价" nzSize="large" (nzBlur)="calculate(item)"></nz-input>
+                </span>
+                </td>
+                <td nz-td>
+                    <span *ngIf="editIndex!==i">{{items.value[i].money | _currency}}</span>
+                    <span *ngIf="editIndex===i" nz-form-control [nzValidateStatus]="item.controls.money">
+                    <nz-input formControlName="money" nzPlaceHolder="请输入金额" nzSize="large"></nz-input>
+                </span>
+                </td>
+                <td nz-td>
+                    <span *ngIf="editIndex!==i">{{items.value[i].description}}</span>
+                    <span *ngIf="editIndex===i" nz-form-control [nzValidateStatus]="item.controls.description">
+                    <nz-input formControlName="description" nzPlaceHolder="请输入序列号" nzSize="large"></nz-input>
+                </span>
+                </td>
+                <td nz-td>
+                <span *ngIf="editIndex!==i">
+                    <a (click)="edit(i)">编辑</a>
+                    <span nz-table-divider></span>
+                    <nz-popconfirm (nzOnConfirm)="del(i)" [nzTitle]="'是否要删除此行？'">
+                        <a nz-popconfirm>删除</a>
+                    </nz-popconfirm>
+                </span>
+                    <span *ngIf="editIndex===i">
+                    <a (click)="save(i)">保存</a>
+                    <span nz-table-divider></span>
+                    <nz-popconfirm (nzOnConfirm)="cancel(i)" [nzTitle]="'是否要取消操作？'">
+                        <a nz-popconfirm>取消</a>
+                    </nz-popconfirm>
+                </span>
+                </td>
+            </tr>
+            </tbody>
+        </nz-table>
+        <button *ngIf="editIndex===-1" nz-button [nzType]="'dashed'" [nzSize]="'large'" (click)="add()" class="ant-btn__block mt-md">
+            <i class="anticon anticon-plus"></i>
+            <span>添加新产品</span>
+        </button>
+    </nz-card>
+
+
+
+
+</form>
+
+<div class="customize-footer" align="right">
+    <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="submit()" style="right:20px;">
+        提交
+    </button>
+    <button nz-button [nzType]="'default'" [nzSize]="'large'" (click)="handleCancel($event)" style="right:10px;">
+        取消
+    </button>
+    <button nz-button [nzType]="'warning'" [nzSize]="'large'" (click)="print()">
+        打印
+    </button>
+</div>
+
+<div style="width:240mm;" #print_div>
+    <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+            <td></td>
+            <td style="font-size:28px; text-align:center;">订货单</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>松城干货行祝您生意兴隆!</td>
+            <td></td>
+            <td style="text-align:right;">订单打印时间: {{now | _date: 'YYYY-MM-DD HH:mm:ss'}}</td>
+        </tr>
+    </table>
+    <table width="100%" cellpadding="0" cellspacing="0" style="font-size:18px; border-bottom:solid 1px #000000;">
+        <tr style="text-align: left;">
+            <td>订单号:</td>
+            <td>{{'201903031123'}}</td>
+            <td>采购公司:</td>
+            <td>{{getPurchaseCompany()}}</td>
+            <td>订单金额:</td>
+            <td>{{money.value | _currency}}</td>
+            <td>描述:</td>
+            <td>{{description.value}}</td>
+        </tr>
+    </table>
+    <table width="100%" cellpadding="0" cellspacing="0" style="width:220mm; font-size:20px;">
+        <thead style="border-bottom:solid 1px #000000;">
+        <tr>
+            <th>序列号</th>
+            <th>产品名称</th>
+            <th>规格</th>
+            <th>数量</th>
+            <th>单价</th>
+            <th>金额</th>
+            <th>备注</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of items.controls; let i = index">
+            <td>
+                <span>{{items.value[i].num}}</span>
+            </td>
+            <td>
+                <span>{{getProductName(items.value[i].productId)}}</span>
+            </td>
+            <td>
+                <span>{{getProductSpec(items.value[i].productId)}}</span>
+            </td>
+            <td>
+                <span>{{items.value[i].quantity}}</span>
+            </td>
+            <td>
+                <span>{{items.value[i].price | _currency}}</span>
+            </td>
+            <td>
+                <span>{{items.value[i].money | _currency}}</span>
+            </td>
+            <td>
+                <span>{{items.value[i].description}}</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span>合计</span>
+            </td>
+            <td>
+                <!--<span>{{getProductName(items.value[i].productId)}}</span>-->
+            </td>
+            <td>
+                <!--<span>{{getProductSpec(items.value[i].productId)}}</span>-->
+            </td>
+            <td>
+                <!--<span>{{items.value[i].quantity}}</span>-->
+            </td>
+            <td>
+                <!--<span>{{items.value[i].price | _currency}}</span>-->
+            </td>
+            <td>
+                <span>{{money.value | _currency}}</span>
+            </td>
+            <td>
+                <!--<span>{{items.value[i].description}}</span>-->
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<essence-ng2-print #printComponent
+                   [showBtn]="false"
+                   [printHTML]="print_div">
+</essence-ng2-print>
