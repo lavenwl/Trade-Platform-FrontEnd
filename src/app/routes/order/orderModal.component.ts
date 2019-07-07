@@ -261,10 +261,10 @@ export class OrderModalComponent implements OnInit {
     }
 
     getSaleCompany() {
-        return this.companyList ? this.companyList.find(i => i.id === this.saleCompany.value).name : '';
+        return (this.companyList && this.saleCompany.value) ? this.companyList.find(i => i.id === this.saleCompany.value).name : '';
     }
 
     getPurchaseCompany() {
-        return this.companyList ? this.companyList.find(i => i.id === this.purchaseCompany.value).name : '';
+        return (this.companyList && this.purchaseCompany.value) ? this.companyList.find(i => i.id === this.purchaseCompany.value).name : '';
     }
 }
