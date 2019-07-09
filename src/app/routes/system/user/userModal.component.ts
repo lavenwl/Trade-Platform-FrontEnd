@@ -24,9 +24,17 @@ export class UserModalComponent implements OnInit {
         this._user = user;
     }
 
+    get user() {
+        return this._user;
+    }
+
     @Input()
     set type(type: string) {
         this._type = type;
+    }
+
+    get type() {
+        return this._type;
     }
 
     constructor(
@@ -37,11 +45,12 @@ export class UserModalComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+
         this.userForm = this.formBuilder.group({
             id: [this._user.id],
             name: [this._user.name, Validators.required],
             password: [this._user.password, Validators.required],
-            role: [this._user.role.id, Validators.required],
+            role: [this.getRoleValue(), Validators.required],
             company: [this._user.company.id, Validators.required],
             phone: [this._user.phone],
             note: [this._user.note]
@@ -104,9 +113,15 @@ export class UserModalComponent implements OnInit {
         user.name = this.userForm.controls.name.value;
         user.phone = this.userForm.controls.phone.value;
         user.password = this.userForm.controls.password.value;
-        const roleId = this.userForm.controls.role.value;
-        const role: Role = this.roleList.filter(item => (item.id === roleId))[0];
-        user.role = role;
+        const roles = this.userForm.controls.role.value;
+        const roleList: Array<Role> = [];
+        this.roleList.forEach(item => {
+            console.log('过滤:', item, roles.find(i => i === item.id), roles.find(i => i === item.id) > 0);
+            if (roles.find(i => i === item.id) > 0) {
+                roleList.push(item);
+            }
+        });
+        user.roleList = roleList;
         const companyId = this.userForm.controls.company.value;
         const company: Company = this.companyList.filter(item => (item.id === companyId))[0];
         user.company = company;
@@ -117,5 +132,11 @@ export class UserModalComponent implements OnInit {
 
     handleCancel(e) {
         this.subject.destroy('onCancel');
+    }
+
+    private getRoleValue() {
+        let roleList = [];
+        this.user.roleList.forEach(role => roleList.push(role.id));
+        return roleList;
     }
 }

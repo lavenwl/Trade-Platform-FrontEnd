@@ -23,7 +23,7 @@
             <tr nz-tbody-tr *ngFor="let data of nzTable.data">
                 <td nz-td> <a>{{data.name}}</a> </td>
                 <td nz-td>{{data.phone}}</td>
-                <td nz-td>{{data.role.name}}</td>
+                <td nz-td><span *ngFor="let item of data.roleList">{{item.name}}, </span></td>
                 <td nz-td>{{data.company.name}}</td>
                 <td nz-td>{{data.note}}</td>
                 <td nz-td>

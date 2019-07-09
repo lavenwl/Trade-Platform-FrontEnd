@@ -24,7 +24,7 @@
                 <label nz-form-item-required>角色</label>
             </div>
             <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="userForm.controls.role">
-                <nz-select formControlName="role" [nzPlaceHolder]="'请选择用户角色'">
+                <nz-select formControlName="role" [nzPlaceHolder]="'请选择用户角色'" nzMultiple="true">
                     <ng-container *ngIf="roleList">
                         <ng-container *ngFor="let data of roleList">
                             <nz-option [nzLabel]="data.name" [nzValue]="data.id" > </nz-option>

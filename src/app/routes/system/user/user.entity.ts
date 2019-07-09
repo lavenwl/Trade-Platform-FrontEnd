@@ -5,7 +5,7 @@ export class User {
     id: number;
     name: string;
     password: string;
-    role = new Role();
+    roleList: Array<Role> = [];
     company = new Company();
     phone: string;
     note: string;
