@@ -18,7 +18,12 @@ export class PassportService {
     constructor(
         private http: HttpClient
     ) { }
+
     login(param: LoginParam) {
         return this.http.post('/server/home/login', param);
+    }
+
+    logout() {
+        return this.http.get('/server/home/logout');
     }
 }

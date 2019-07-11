@@ -56,6 +56,31 @@ export class ProductModalComponent implements OnInit {
         });
     }
 
+    get name() {
+        return this.productForm.controls['name'];
+    }
+    get formType() {
+        return this.productForm.controls['type'];
+    }
+    get spec() {
+        return this.productForm.controls['spec'];
+    }
+    get priceIn() {
+        return this.productForm.controls['priceIn'];
+    }
+    get priceOut() {
+        return this.productForm.controls['priceOut'];
+    }
+    get provider() {
+        return this.productForm.controls['provider'];
+    }
+    get factory() {
+        return this.productForm.controls['factory'];
+    }
+    get note() {
+        return this.productForm.controls['note'];
+    }
+
     submit() {
         for (const i in this.productForm.controls) {
             this.productForm.controls[ i ].markAsDirty();
@@ -90,15 +115,16 @@ export class ProductModalComponent implements OnInit {
 
     getSubmitData(): Product {
         const product = new Product();
-        product.id = this.productForm.controls.id.value;
-        product.name = this.productForm.controls.name.value;
-        product.spec = this.productForm.controls.spec.value;
-        product.priceIn = this.productForm.controls.priceIn.value;
-        product.priceOut = this.productForm.controls.priceOut.value;
-        product.provider = this.productForm.controls.provider.value;
-        product.factory = this.productForm.controls.factory.value;
-        product.note = this.productForm.controls.note.value;
-        const typeId = this.productForm.controls.type.value;
+        // product.id = this.productForm.controls.id.value;
+        // product.name = this.productForm.controls.name.value;
+        // product.spec = this.productForm.controls.spec.value;
+        // product.priceIn = this.productForm.controls.priceIn.value;
+        // product.priceOut = this.productForm.controls.priceOut.value;
+        // product.provider = this.productForm.controls.provider.value;
+        // product.factory = this.productForm.controls.factory.value;
+        // product.note = this.productForm.controls.note.value;
+        const typeId = this.formType.value;
+        Object.assign(product, this.productForm.value);
         const type: Type = this._typeList.filter(item => (item.id === typeId))[0];
         product.type = type;
         product.createTime = this._product.createTime;

@@ -2,6 +2,9 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { SettingsService } from '@delon/theme';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
+import {PassportService} from '../../../../routes/passport/passport.service';
+import {NzMessageService} from 'ng-zorro-antd';
+import {Result} from '@core/net/Result.entity';
 
 @Component({
     selector: 'header-user',
@@ -24,6 +27,8 @@ export class HeaderUserComponent implements OnInit {
     constructor(
         public settings: SettingsService,
         private router: Router,
+        private passportService: PassportService,
+        private messageService: NzMessageService,
         @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService) {}
 
     ngOnInit(): void {
@@ -41,7 +46,16 @@ export class HeaderUserComponent implements OnInit {
     }
 
     logout() {
-        this.tokenService.clear();
-        this.router.navigateByUrl(this.tokenService.login_url);
+        this.passportService.logout().subscribe((data: Result) => {
+            if (data.code === 0) {
+                this.messageService.success('登出成功');
+                this.tokenService.clear();
+                this.router.navigateByUrl(this.tokenService.login_url);
+            } else {
+                this.messageService.error('登出失败');
+            }
+
+        });
+
     }
 }

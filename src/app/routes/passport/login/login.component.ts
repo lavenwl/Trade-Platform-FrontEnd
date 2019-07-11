@@ -42,10 +42,10 @@ export class UserLoginComponent implements OnDestroy {
 
     // region: fields
 
-    get userName() { return this.form.controls.userName; }
-    get password() { return this.form.controls.password; }
-    get mobile() { return this.form.controls.mobile; }
-    get captcha() { return this.form.controls.captcha; }
+    get userName() { return this.form.controls['userName']; }
+    get password() { return this.form.controls['password']; }
+    get mobile() { return this.form.controls['mobile']; }
+    get captcha() { return this.form.controls['captcha']; }
 
     // endregion
 
