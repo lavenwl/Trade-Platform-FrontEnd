@@ -24,28 +24,12 @@ export class ProductComponent implements OnInit, AfterViewInit {
     ) { }
 
     ngOnInit() {
-        this.service.loadProductList().subscribe((data: any) => {
-            if (data.code !== 0) {
-                this.message.error(data.msg);
-                return;
-            }
-            this.productList = data.data;
-            this.copyData = [ ...this.productList ];
-        });
-
-
+        this.refreshPageData();
     }
 
     /** 激活页面时更新页面数据 */
     _onReuseInit() {
-        this.service.loadProductList().subscribe((data: any) => {
-            if (data.code !== 0) {
-                this.message.error(data.msg);
-                return;
-            }
-            this.productList = data.data;
-            this.copyData = [ ...this.productList ];
-        });
+        this.refreshPageData();
     }
 
     ngAfterViewInit() {
@@ -126,6 +110,17 @@ export class ProductComponent implements OnInit, AfterViewInit {
                     }
                 });
             }
+        });
+    }
+
+    refreshPageData() {
+        this.service.loadProductList().subscribe((data: any) => {
+            if (data.code !== 0) {
+                this.message.error(data.msg);
+                return;
+            }
+            this.productList = data.data;
+            this.copyData = [ ...this.productList ];
         });
     }
 
