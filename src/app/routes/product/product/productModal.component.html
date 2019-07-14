@@ -4,9 +4,9 @@
             <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
                 <label nz-form-item-required>名称</label>
             </div>
-            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="productForm.controls.name">
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="name">
                 <nz-input formControlName="name" [nzPlaceHolder]="'请输入名称'"></nz-input>
-                <div nz-form-explain *ngIf="productForm.controls.name.dirty&&productForm.controls.name.hasError('required')">请按规则输入名称!</div>
+                <div nz-form-explain *ngIf="name.dirty&&name.hasError('required')">请按规则输入名称!</div>
             </div>
         </div>
 
@@ -14,15 +14,15 @@
             <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
                 <label nz-form-item-required>类型</label>
             </div>
-            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="productForm.controls.type">
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="formType">
                 <nz-select formControlName="type" [nzPlaceHolder]="'请选择产品类型'">
-                    <ng-container *ngIf="_typeList">
-                        <ng-container *ngFor="let data of _typeList">
+                    <ng-container *ngIf="typeList">
+                        <ng-container *ngFor="let data of typeList">
                             <nz-option [nzLabel]="data.name" [nzValue]="data.id" > </nz-option>
                         </ng-container>
                     </ng-container>
                 </nz-select>
-                <div nz-form-explain *ngIf="productForm.controls.type.dirty&&productForm.controls.type.hasError('required')">请按规则输入名称!</div>
+                <div nz-form-explain *ngIf="formType.dirty&&formType.hasError('required')">请按规则输入产品类型!</div>
             </div>
         </div>
 
@@ -30,34 +30,43 @@
             <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
                 <label nz-form-item-required>规格</label>
             </div>
-            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="productForm.controls.spec">
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="spec">
                 <nz-input formControlName="spec" [nzPlaceHolder]="'请输入规格（50斤/大包/小包）'"></nz-input>
-                <div nz-form-explain *ngIf="productForm.controls.spec.dirty&&productForm.controls.spec.hasError('required')">请按规则输入规格!</div>
+                <div nz-form-explain *ngIf="spec.dirty&&spec.hasError('required')">请按规则输入规格!</div>
             </div>
         </div>
         <div nz-form-item nz-row>
             <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
                 <label nz-form-item-required>采购价</label>
             </div>
-            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="productForm.controls.priceIn">
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="priceIn">
                 <nz-input formControlName="priceIn" [nzPlaceHolder]="'请输入进货价格'"></nz-input>
-                <div nz-form-explain *ngIf="productForm.controls.priceIn.dirty&&productForm.controls.priceIn.hasError('required')">请按规则输入进货价!</div>
+                <div nz-form-explain *ngIf="priceIn.dirty&&priceIn.hasError('required')">请按规则输入进货价!</div>
             </div>
         </div>
         <div nz-form-item nz-row>
             <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
                 <label nz-form-item-required>销售价</label>
             </div>
-            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="productForm.controls.priceOut">
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="priceOut">
                 <nz-input formControlName="priceOut" [nzPlaceHolder]="'请输入销售价'"></nz-input>
-                <div nz-form-explain *ngIf="productForm.controls.priceOut.dirty&&productForm.controls.priceOut.hasError('required')">请按规则输入销售价!</div>
+                <div nz-form-explain *ngIf="priceOut.dirty&&priceOut.hasError('required')">请按规则输入销售价!</div>
+            </div>
+        </div>
+        <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label nz-form-item-required>库存</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="stock">
+                <nz-input formControlName="stock" [nzPlaceHolder]="'请输入库存'"></nz-input>
+                <div nz-form-explain *ngIf="stock.dirty&&stock.hasError('required')">请按规则输入库存!</div>
             </div>
         </div>
         <div nz-form-item nz-row>
             <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
                 <label >供应商</label>
             </div>
-            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="productForm.controls.provider">
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="provider">
                 <nz-input formControlName="provider" [nzPlaceHolder]="'请输入供应商名称'"></nz-input>
             </div>
         </div>
@@ -65,7 +74,7 @@
             <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
                 <label >厂家</label>
             </div>
-            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="productForm.controls.factory">
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="factory">
                 <nz-input formControlName="factory" [nzPlaceHolder]="'请输入生产厂家'"></nz-input>
             </div>
         </div>
@@ -73,7 +82,7 @@
             <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
                 <label >备注</label>
             </div>
-            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="productForm.controls.note">
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="note">
                 <nz-input formControlName="note" [nzPlaceHolder]="'请输入备注信息'"></nz-input>
             </div>
         </div>

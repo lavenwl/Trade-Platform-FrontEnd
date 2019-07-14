@@ -55,6 +55,7 @@ export class PurchaseComponent implements OnInit {
     openAddModal() {
         const order: Order = new Order();
         order.type = 1;
+        order.orderId = this.service.createOrderId();
         const subscription = this.modalService.open({
             title          : '新增采购订单',
             width          : (window.innerWidth * 0.9),

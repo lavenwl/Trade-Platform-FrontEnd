@@ -11,9 +11,10 @@
         <nz-table #nzTable [nzAjaxData]="orderList" nzBordered nzIsPagination="false">
             <thead nz-thead>
             <tr>
+                <th nz-th><span>订单号</span></th>
                 <th nz-th><span>供应商</span></th>
                 <th nz-th><span>订单金额</span></th>
-                <th nz-th><span>修改时间</span></th>
+                <!--<th nz-th><span>修改时间</span></th>-->
                 <th nz-th><span>生成时间</span></th>
                 <th nz-th><span>备注</span></th>
                 <th nz-th><span>操作</span></th>
@@ -22,10 +23,13 @@
             <tbody nz-tbody>
             <tr nz-tbody-tr *ngFor="let data of nzTable.data">
                 <td nz-td>
-                    <a>{{data.saleCompany.name}}</a>
+                    {{data.orderId}}
+                </td>
+                <td nz-td>
+                    {{data.saleCompany.name}}
                 </td>
                 <td nz-td>{{data.money | _currency}}</td>
-                <td nz-td>{{data.updateTime | _date: 'YYYY-MM-DD HH:mm:ss'}}</td>
+                <!--<td nz-td>{{data.updateTime | _date: 'YYYY-MM-DD HH:mm:ss'}}</td>-->
                 <td nz-td>{{data.createTime | _date: 'YYYY-MM-DD HH:mm:ss'}}</td>
                 <td nz-td>{{data.description}}</td>
                 <td nz-td>

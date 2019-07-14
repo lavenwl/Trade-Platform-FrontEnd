@@ -3,6 +3,7 @@ import {Item} from './item.entity';
 
 export class Order {
     id: number;
+    orderId: string;
     type: number;
     purchaseCompany = new Company();
     saleCompany = new Company();

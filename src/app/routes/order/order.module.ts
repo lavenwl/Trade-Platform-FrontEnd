@@ -8,6 +8,7 @@ import {OrderService} from './order.service';
 import {SystemService} from '../system/system.service';
 import {ProductService} from '../product/product.service';
 import { EssenceNg2PrintModule } from 'essence-ng2-print';
+import {DatePipe} from '@angular/common';
 
 @NgModule({
   imports: [
@@ -15,7 +16,7 @@ import { EssenceNg2PrintModule } from 'essence-ng2-print';
       OrderRoutingModule,
       EssenceNg2PrintModule
   ],
-  providers: [OrderService, SystemService, ProductService],
+  providers: [OrderService, SystemService, ProductService, DatePipe],
   declarations: [PurchaseComponent, SaleComponent, OrderModalComponent],
   entryComponents: [
       OrderModalComponent

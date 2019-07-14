@@ -55,6 +55,7 @@ export class SaleComponent implements OnInit {
     openAddModal() {
         const order: Order = new Order();
         order.type = 0;
+        order.orderId = this.service.createOrderId();
         const subscription = this.modalService.open({
             title          : '新增销售订单',
             width          : (window.innerWidth * 0.9),

@@ -35,9 +35,17 @@ export class OrderModalComponent implements OnInit {
         this._order = order;
     }
 
+    get order() {
+        return this._order;
+    }
+
     @Input()
     set type(type: string) {
         this._type = type;
+    }
+
+    get type() {
+        return this._type;
     }
 
     constructor(
@@ -51,12 +59,13 @@ export class OrderModalComponent implements OnInit {
 
     ngOnInit() {
         this.orderForm = this.formBuilder.group({
-            id: [this._order.id],
-            type: [this._order.type, Validators.required],
-            purchaseCompany: [this._order.purchaseCompany.id, Validators.required],
-            saleCompany: [this._order.saleCompany.id, Validators.required],
-            description: [this._order.description],
-            money: [this._order.money, Validators.required],
+            id: [this.order.id],
+            orderId: [this.order.orderId],
+            type: [this.order.type, Validators.required],
+            purchaseCompany: [this.order.purchaseCompany.id, (this.order.type === 0) ? Validators.required : []],
+            saleCompany: [this.order.saleCompany.id, (this.order.type === 1) ? Validators.required : []],
+            description: [this.order.description],
+            money: [this.order.money, Validators.required],
             items: this.formBuilder.array([])
         });
         this.systemService.loadCompanyList().subscribe((data: Result) => {
@@ -74,9 +83,9 @@ export class OrderModalComponent implements OnInit {
             this.productList = data.data;
         });
 
-        if (this._order.itemList) {
+        if (this.order.itemList) {
             // 初始化表单
-            this._order.itemList.forEach(i => {
+            this.order.itemList.forEach(i => {
                 const field = this.createItem();
                 field.patchValue(i);
                 this.items.push(field);
@@ -85,23 +94,23 @@ export class OrderModalComponent implements OnInit {
 
     }
 
-    // get type() {
-    //     return this.orderForm.controls.type;
-    // }
+    get orderId() {
+        return this.orderForm.controls['orderId'];
+    }
     get purchaseCompany() {
-        return this.orderForm.controls.purchaseCompany;
+        return this.orderForm.controls['purchaseCompany'];
     }
     get saleCompany() {
-        return this.orderForm.controls.saleCompany;
+        return this.orderForm.controls['saleCompany'];
     }
     get description() {
-        return this.orderForm.controls.description;
+        return this.orderForm.controls['description'];
     }
     get money() {
-        return this.orderForm.controls.money;
+        return this.orderForm.controls['money'];
     }
 
-    get items() { return this.orderForm.controls.items as FormArray; }
+    get items() { return this.orderForm.controls['items'] as FormArray; }
 
     submit() {
         for (const i in this.orderForm.controls) {
@@ -109,7 +118,7 @@ export class OrderModalComponent implements OnInit {
         }
         if (this.orderForm.valid) {
             const order = this.getSubmitData();
-            if (this._type === 'add') {
+            if (this.type === 'add') {
                 this.service.addOrder(order).subscribe(
                     (data: Result) => {
                         if (data.code !== 0) {
@@ -119,7 +128,7 @@ export class OrderModalComponent implements OnInit {
                         this.subject.next({back: true, data: data.data});
                         this.handleCancel(null);
                     });
-            } else if (this._type === 'update') {
+            } else if (this.type === 'update') {
                 this.service.updateOrder(order).subscribe(
                     (data: Result) => {
                         if (data.code !== 0) {
@@ -138,22 +147,19 @@ export class OrderModalComponent implements OnInit {
 
     getSubmitData(): Order {
         const order = new Order();
-        order.id = this.orderForm.controls.id.value;
-        order.type = this.orderForm.controls.type.value;
-        const saleCompanyId = this.orderForm.controls.saleCompany.value;
-        const saleCompany = this.companyList.filter((item) => item.id === saleCompanyId)[0];
-        order.saleCompany = saleCompany;
-        const purchaseCompanyId = this.orderForm.controls.purchaseCompany.value;
-        const purchaseCompany = this.companyList.filter((item) => item.id === purchaseCompanyId)[0];
-        order.purchaseCompany = purchaseCompany;
-        order.money = this.orderForm.controls.money.value;
-        order.description = this.orderForm.controls.description.value;
+        Object.assign(order, this.orderForm.value);
         // const itemList = this.items.value;
         // itemList.forEach(item => {
         //    item.product = this.productList.filter(product => product.id === item.productId)[0];
         // });
+        const saleCompanyId = this.saleCompany.value;
+        const saleCompany = this.companyList.filter((item) => item.id === saleCompanyId)[0];
+        order.saleCompany = saleCompany;
+        const purchaseCompanyId = this.purchaseCompany.value;
+        const purchaseCompany = this.companyList.filter((item) => item.id === purchaseCompanyId)[0];
+        order.purchaseCompany = purchaseCompany;
         order.itemList = this.items.value;
-        order.createTime = this._order.createTime;
+        order.createTime = this.order.createTime;
         return order;
     }
 
@@ -219,19 +225,19 @@ export class OrderModalComponent implements OnInit {
     }
 
     calculate(itemForm: FormGroup) {
-        const product = this.productList.filter(data => data.id === itemForm.controls.productId.value)[0];
+        const product = this.productList.filter(data => data.id === itemForm.controls['productId'].value)[0];
         if (product) {
             let price = 0;
-            if (this._order.type === 1) {
+            if (this.order.type === 1) {
                 price = product.priceIn;
             } else {
                 price = product.priceOut;
             }
-            if (!itemForm.controls.price.value || itemForm.controls.price.value === 0) {
-                itemForm.controls.price.setValue(price);
-                itemForm.controls.money.setValue(price * itemForm.controls.quantity.value);
+            if (!itemForm.controls['price'].value || itemForm.controls['price'].value === 0) {
+                itemForm.controls['price'].setValue(price);
+                itemForm.controls['money'].setValue(price * itemForm.controls['quantity'].value);
             } else {
-                itemForm.controls.money.setValue(itemForm.controls.price.value * itemForm.controls.quantity.value);
+                itemForm.controls['money'].setValue(itemForm.controls['price'].value * itemForm.controls['quantity'].value);
             }
 
         }
@@ -240,7 +246,7 @@ export class OrderModalComponent implements OnInit {
         this.items.value.forEach( item => {
             orderMoney = orderMoney + Number(item.money);
         });
-        this.orderForm.controls.money.setValue(orderMoney);
+        this.money.setValue(orderMoney);
     }
 
     calculate2() {
@@ -248,7 +254,7 @@ export class OrderModalComponent implements OnInit {
         this.items.value.forEach( item => {
             orderMoney = orderMoney + Number(item.money);
         });
-        this.orderForm.controls.money.setValue(orderMoney);
+        this.money.setValue(orderMoney);
     }
 
     handleCancel(e) {

@@ -13,10 +13,18 @@ import {Result} from '@core/net/Result.entity';
 export class ProductModalComponent implements OnInit {
 
     _product: Product;
-    _typeList: Type[];
+    private _typeList: Type[];
     _type: string;
     productForm: FormGroup;
 
+
+    get typeList(): Type[] {
+        return this._typeList;
+    }
+
+    set typeList(value: Type[]) {
+        this._typeList = value;
+    }
 
     @Input()
     set product(product: Product) {
@@ -43,6 +51,7 @@ export class ProductModalComponent implements OnInit {
             spec: [this._product.spec, Validators.required],
             priceIn: [this._product.priceIn, Validators.required],
             priceOut: [this._product.priceOut, Validators.required],
+            stock: [this._product.stock, Validators.required],
             provider: [this._product.provider],
             factory: [this._product.factory],
             note: [this._product.note]
@@ -65,8 +74,14 @@ export class ProductModalComponent implements OnInit {
     get spec() {
         return this.productForm.controls['spec'];
     }
+    get fromType() {
+        return this.productForm.controls['fromType'];
+    }
     get priceIn() {
         return this.productForm.controls['priceIn'];
+    }
+    get stock() {
+        return this.productForm.controls['stock'];
     }
     get priceOut() {
         return this.productForm.controls['priceOut'];
