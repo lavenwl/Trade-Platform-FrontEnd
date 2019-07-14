@@ -92,7 +92,7 @@
                 <td nz-td>
                     <span *ngIf="editIndex!==i">{{getProductName(items.value[i].productId)}}</span>
                     <span *ngIf="editIndex===i" nz-form-control [nzValidateStatus]="item.controls.productId">
-                    <nz-select formControlName="productId" [nzPlaceHolder]="'请选择产品'" (nzOpenChange)="calculate(item)">
+                    <nz-select formControlName="productId" [nzOpen]="false" [nzPlaceHolder]="'请选择产品'" (nzOpenChange)="chooseProduct(item)" nzShowSearch (nzSearchChange)="searchChange($event)">
                         <ng-container *ngIf="productList">
                             <ng-container *ngFor="let data of productList">
                                 <nz-option [nzLabel]="data.name" [nzValue]="data.id" > </nz-option>
@@ -169,95 +169,137 @@
     </button>
 </div>
 
-<div style="width:240mm; display: none" #print_div>
-    <table width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-            <td></td>
-            <td style="font-size:28px; text-align:center;">订货单</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>松城干货行祝您生意兴隆!</td>
-            <td></td>
-            <td style="text-align:right;">订单打印时间: {{now | _date: 'YYYY-MM-DD HH:mm:ss'}}</td>
-        </tr>
-    </table>
-    <table width="100%" cellpadding="0" cellspacing="0" style="font-size:18px; border-bottom:solid 1px #000000;">
-        <tr style="text-align: left;">
-            <td>订单号:</td>
-            <td>{{orderId.value}}</td>
-            <td>采购公司:</td>
-            <td>{{getPurchaseCompany()}}</td>
-            <td>订单金额:</td>
-            <td>{{money.value | _currency}}</td>
-            <td>描述:</td>
-            <td>{{description.value}}</td>
-        </tr>
-    </table>
-    <table width="100%" cellpadding="0" cellspacing="0" style="width:220mm; font-size:20px;">
-        <thead style="border-bottom:solid 1px #000000;">
-        <tr>
-            <th>序列号</th>
-            <th>产品名称</th>
-            <th>规格</th>
-            <th>数量</th>
-            <th>单价</th>
-            <th>金额</th>
-            <th>备注</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let item of items.controls; let i = index">
-            <td>
-                <span>{{items.value[i].num}}</span>
-            </td>
-            <td>
-                <span>{{getProductName(items.value[i].productId)}}</span>
-            </td>
-            <td>
-                <span>{{getProductSpec(items.value[i].productId)}}</span>
-            </td>
-            <td>
-                <span>{{items.value[i].quantity}}</span>
-            </td>
-            <td>
-                <span>{{items.value[i].price | _currency}}</span>
-            </td>
-            <td>
-                <span>{{items.value[i].money | _currency}}</span>
-            </td>
-            <td>
-                <span>{{items.value[i].description}}</span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <span>合计</span>
-            </td>
-            <td>
-                <!--<span>{{getProductName(items.value[i].productId)}}</span>-->
-            </td>
-            <td>
-                <!--<span>{{getProductSpec(items.value[i].productId)}}</span>-->
-            </td>
-            <td>
-                <!--<span>{{items.value[i].quantity}}</span>-->
-            </td>
-            <td>
-                <!--<span>{{items.value[i].price | _currency}}</span>-->
-            </td>
-            <td>
-                <span>{{money.value | _currency}}</span>
-            </td>
-            <td>
-                <!--<span>{{items.value[i].description}}</span>-->
-            </td>
-        </tr>
-        </tbody>
-    </table>
+<div style="display: none">
+    <div style="width:240mm;" #print_div>
+        <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+                <td></td>
+                <td style="font-size:28px; text-align:center;">订货单</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>松城干货行祝您生意兴隆!</td>
+                <td></td>
+                <td style="text-align:right;">订单打印时间: {{now | _date: 'YYYY-MM-DD HH:mm:ss'}}</td>
+            </tr>
+        </table>
+        <table width="100%" cellpadding="0" cellspacing="0" style="font-size:18px; border-bottom:solid 1px #000000;">
+            <tr style="text-align: left;">
+                <td>订单号:</td>
+                <td>{{orderId.value}}</td>
+                <td>采购公司:</td>
+                <td>{{getPurchaseCompany()}}</td>
+                <td>订单金额:</td>
+                <td>{{money.value | _currency}}</td>
+                <td>描述:</td>
+                <td>{{description.value}}</td>
+            </tr>
+        </table>
+        <table width="100%" cellpadding="0" cellspacing="0" style="width:220mm; font-size:20px;">
+            <thead style="border-bottom:solid 1px #000000;">
+            <tr>
+                <th>序列号</th>
+                <th>产品名称</th>
+                <th>规格</th>
+                <th>数量</th>
+                <th>单价</th>
+                <th>金额</th>
+                <th>备注</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of orderedItem(items.controls); let i = index">
+                <td>
+                    <span>{{items.value[i].num}}</span>
+                </td>
+                <td>
+                    <span>{{getProductName(items.value[i].productId)}}</span>
+                </td>
+                <td>
+                    <span>{{getProductSpec(items.value[i].productId)}}</span>
+                </td>
+                <td>
+                    <span>{{items.value[i].quantity}}</span>
+                </td>
+                <td>
+                    <span>{{items.value[i].price | _currency}}</span>
+                </td>
+                <td>
+                    <span>{{items.value[i].money | _currency}}</span>
+                </td>
+                <td>
+                    <span>{{items.value[i].description}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>合计</span>
+                </td>
+                <td>
+                    <!--<span>{{getProductName(items.value[i].productId)}}</span>-->
+                </td>
+                <td>
+                    <!--<span>{{getProductSpec(items.value[i].productId)}}</span>-->
+                </td>
+                <td>
+                    <!--<span>{{items.value[i].quantity}}</span>-->
+                </td>
+                <td>
+                    <!--<span>{{items.value[i].price | _currency}}</span>-->
+                </td>
+                <td>
+                    <span>{{money.value | _currency}}</span>
+                </td>
+                <td>
+                    <!--<span>{{items.value[i].description}}</span>-->
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
+
 
 <essence-ng2-print #printComponent
                    [showBtn]="false"
                    [printHTML]="print_div">
 </essence-ng2-print>
+
+
+
+<nz-modal [nzVisible]="isVisible" [nzWidth]="productSelectWidth" [nzFooter]="false" [nzTitle]="'产品选择页面'" [nzContent]="modalContent" (nzOnCancel)="handleCancelSelect($event)" (nzOnOk)="handleOkSelect($event)">
+    <ng-template #modalContent>
+        <div style="">
+            <div nz-row [nzGutter]="8">
+                <div nz-col [nzSpan]="8" *ngFor="let grid of productSelectPageData">
+                    <nz-card>
+                        <ng-template #title>
+                            {{grid.name}}
+                        </ng-template>
+                        <ng-template #body>
+                            <nz-tag *ngFor="let product of grid.productList" style="padding-bottom: 10px;" (click)="select(product.id)">{{product.name}}</nz-tag>
+                        </ng-template>
+                    </nz-card>
+                </div>
+                <!--<div nz-col [nzSpan]="12">-->
+                    <!--<nz-card>-->
+                        <!--<ng-template #title>-->
+                            <!--Card title-->
+                        <!--</ng-template>-->
+                        <!--<ng-template #body>-->
+                            <!--<div nz-card-grid [ngStyle]="gridStyle">卡片内容</div>-->
+                            <!--<div nz-card-grid [ngStyle]="gridStyle">卡片内容</div>-->
+                            <!--<div nz-card-grid [ngStyle]="gridStyle">卡片内容</div>-->
+                            <!--<div nz-card-grid [ngStyle]="gridStyle">卡片内容</div>-->
+                            <!--<div nz-card-grid [ngStyle]="gridStyle">卡片内容</div>-->
+                            <!--<div nz-card-grid [ngStyle]="gridStyle">卡片内容</div>-->
+                            <!--<div nz-card-grid [ngStyle]="gridStyle">卡片内容</div>-->
+                        <!--</ng-template>-->
+                    <!--</nz-card>-->
+                <!--</div>-->
+
+            </div>
+
+        </div>
+    </ng-template>
+</nz-modal>

@@ -1,6 +1,6 @@
 import {Component, OnInit, Input, ViewChild} from '@angular/core';
-import {NzMessageService, NzModalSubject} from 'ng-zorro-antd';
-import {FormGroup, Validators, FormBuilder, FormArray} from '@angular/forms';
+import {NzMessageService, NzModalService, NzModalSubject} from 'ng-zorro-antd';
+import {FormGroup, Validators, FormBuilder, FormArray, AbstractControl} from '@angular/forms';
 import {Order} from './order.entity';
 import {OrderService} from './order.service';
 import {Company} from '../system/company/company.entity';
@@ -9,6 +9,8 @@ import {Product} from '../product/product/product.entity';
 import {ProductService} from '../product/product.service';
 import {Result} from '@core/net/Result.entity';
 import {EssenceNg2PrintComponent} from 'essence-ng2-print';
+import {isNullOrUndefined} from "util";
+import {Type} from "../product/type/type.entity";
 
 @Component({
     selector: 'app-order-modal',
@@ -20,6 +22,7 @@ export class OrderModalComponent implements OnInit {
     orderForm: FormGroup;
     companyList: Company[];
     productList: Product[];
+    originalProductList: Product[];
 
     editIndex = -1;
     editObj = {};
@@ -54,7 +57,8 @@ export class OrderModalComponent implements OnInit {
         private formBuilder: FormBuilder,
         private service: OrderService,
         private systemService: SystemService,
-        private productService: ProductService
+        private productService: ProductService,
+        private modalService: NzModalService
     ) { }
 
     ngOnInit() {
@@ -81,6 +85,7 @@ export class OrderModalComponent implements OnInit {
                 return;
             }
             this.productList = data.data;
+            this.originalProductList = JSON.parse(JSON.stringify(data.data));
         });
 
         if (this.order.itemList) {
@@ -215,13 +220,13 @@ export class OrderModalComponent implements OnInit {
     }
 
     getProductName(index: number) {
-        if (!this.productList || !index) return;
-        return this.productList.filter(product => product.id === index)[0].name;
+        if (!this.originalProductList || !index) return;
+        return this.originalProductList.filter(product => product.id === index)[0].name;
     }
 
     getProductSpec(index: number) {
-        if (!this.productList || !index) return;
-        return this.productList.filter(product => product.id === index)[0].spec;
+        if (!this.originalProductList || !index) return;
+        return this.originalProductList.filter(product => product.id === index)[0].spec;
     }
 
     calculate(itemForm: FormGroup) {
@@ -272,5 +277,70 @@ export class OrderModalComponent implements OnInit {
 
     getPurchaseCompany() {
         return (this.companyList && this.purchaseCompany.value) ? this.companyList.find(i => i.id === this.purchaseCompany.value).name : '';
+    }
+
+    item = null;
+    chooseProduct(item: FormGroup) {
+        this.item = item;
+        this.productList = [];
+        this.showModal();
+        // this.calculate(item);
+    }
+
+    isVisible = false;
+
+    showModal = () => {
+        this.prepareProductSelectPageData();
+        this.isVisible = true;
+    }
+
+    handleOkSelect = (e) => {
+        console.log('点击了确定');
+        this.isVisible = false;
+    }
+
+    handleCancelSelect = (e) => {
+        console.log(e);
+        this.isVisible = false;
+    }
+
+    get productSelectWidth() {
+        return window.innerWidth * 0.9;
+    }
+
+    productSelectPageData = [];
+
+    private prepareProductSelectPageData() {
+        this.productSelectPageData = [];
+        this.originalProductList.forEach(item => {
+            const typeId = item.type.id;
+            const type = this.productSelectPageData.find(i => i.id === typeId);
+            if (isNullOrUndefined(type)) {
+                const newType = item.type;
+                newType.productList = [item];
+                this.productSelectPageData.push(newType);
+            } else {
+                type.productList.push(item);
+            }
+        });
+        console.log('分组后的数据', this.productSelectPageData);
+    }
+
+    gridStyle = {
+        width: '25%',
+        textAlign: 'center',
+    };
+
+    select(id: number) {
+        this.productList = this.originalProductList;
+        this.item.controls.productId.setValue(id);
+        this.calculate(this.item);
+        this.item = null;
+        this.handleOkSelect(null);
+    }
+
+    orderedItem(controls: AbstractControl[]) {
+        console.log(controls);
+        return controls;
     }
 }

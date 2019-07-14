@@ -1,3 +1,5 @@
+import {Product} from '../product/product.entity';
+
 export class Type {
     id: number;
     name: string;
@@ -5,4 +7,5 @@ export class Type {
     updateTime: number;
     createTime: number;
     enable: boolean;
+    productList: Array<Product>;
 }

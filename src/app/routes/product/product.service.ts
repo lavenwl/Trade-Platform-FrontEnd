@@ -2,11 +2,13 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Product} from './product/product.entity';
 import {Type} from './type/type.entity';
+import {CacheService} from "@delon/cache";
 
 @Injectable()
 export class ProductService {
     constructor(
-        private http: HttpClient
+        private http: HttpClient,
+        private cacheService: CacheService
     ) { }
 
     /**
@@ -14,6 +16,13 @@ export class ProductService {
      * @returns {Observable<Object>}
      */
     loadProductList() {
+        // let productList = [];
+        // if (this.cacheService.get('productList')) {
+        //
+        // } else {
+        //     this.http.get('/server/product');
+        //
+        // }
         return this.http.get('/server/product');
     }
 
