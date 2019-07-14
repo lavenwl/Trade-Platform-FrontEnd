@@ -1,6 +1,6 @@
 import {MockRequest} from '@delon/mock';
 import {Order} from '../src/app/routes/order/order.entity';
-import {Result} from "@core/net/Result.entity";
+import {Result} from '@core/net/Result.entity';
 
 
 //

@@ -62,8 +62,8 @@ export class OrderModalComponent implements OnInit {
             id: [this.order.id],
             orderId: [this.order.orderId],
             type: [this.order.type, Validators.required],
-            purchaseCompany: [this.order.purchaseCompany.id, (this.order.type === 0) ? Validators.required : []],
-            saleCompany: [this.order.saleCompany.id, (this.order.type === 1) ? Validators.required : []],
+            purchaseCompany: [this.order.purchaseCompany ? this.order.purchaseCompany.id : null, (this.order.type === 0) ? Validators.required : []],
+            saleCompany: [this.order.saleCompany ? this.order.saleCompany.id : null, (this.order.type === 1) ? Validators.required : []],
             description: [this.order.description],
             money: [this.order.money, Validators.required],
             items: this.formBuilder.array([])
