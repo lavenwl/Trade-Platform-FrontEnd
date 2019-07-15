@@ -26,7 +26,7 @@ export class PurchaseComponent implements OnInit {
                 return;
             }
             data.data.forEach(item => {
-                item.itemList = item.itemList.sort((a, b) => a.num > b.num);
+                item.itemList = item.itemList.sort((a, b) => a.num - b.num);
             })
             this.orderList = data.data;
         });

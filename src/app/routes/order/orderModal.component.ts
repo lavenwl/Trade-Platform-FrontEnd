@@ -339,8 +339,9 @@ export class OrderModalComponent implements OnInit {
         this.handleOkSelect(null);
     }
 
-    orderedItem(controls: AbstractControl[]) {
-        console.log(controls);
+    orderedItem(controls: any) {
+        // console.log(controls);
+        // controls = controls.sort((a: any, b: any) => a.value.num > b.value.num);
         return controls;
     }
 }
